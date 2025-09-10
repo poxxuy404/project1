@@ -27,24 +27,63 @@ export class CartManager {
       existingItem.quantity += 1
     } else {
       // Get product data (we'll import this later)
-      const products = [
-        { id: 1, name: 'Fresh Bananas', price: 2.99, category: 'fruits', description: 'Sweet and ripe bananas, perfect for smoothies', emoji: '🍌' },
-        { id: 2, name: 'Red Apples', price: 4.99, category: 'fruits', description: 'Crisp and juicy red apples, great for snacking', emoji: '🍎' },
-        { id: 3, name: 'Orange Pack', price: 6.99, category: 'fruits', description: 'Fresh oranges packed with vitamin C', emoji: '🍊' },
-        { id: 4, name: 'Fresh Strawberries', price: 8.99, category: 'fruits', description: 'Sweet and juicy strawberries, locally grown', emoji: '🍓' },
-        { id: 5, name: 'Green Broccoli', price: 3.99, category: 'vegetables', description: 'Fresh broccoli crowns, rich in nutrients', emoji: '🥦' },
-        { id: 6, name: 'Baby Carrots', price: 2.49, category: 'vegetables', description: 'Sweet baby carrots, perfect for snacking', emoji: '🥕' },
-        { id: 7, name: 'Bell Peppers', price: 5.99, category: 'vegetables', description: 'Colorful bell peppers, great for cooking', emoji: '🫑' },
-        { id: 8, name: 'Fresh Spinach', price: 4.49, category: 'vegetables', description: 'Organic spinach leaves, perfect for salads', emoji: '🥬' },
-        { id: 9, name: 'Whole Milk', price: 3.79, category: 'dairy', description: 'Fresh whole milk, locally sourced', emoji: '🥛' },
-        { id: 10, name: 'Greek Yogurt', price: 5.99, category: 'dairy', description: 'Creamy Greek yogurt, high in protein', emoji: '🥛' },
-        { id: 11, name: 'Cheddar Cheese', price: 7.99, category: 'dairy', description: 'Sharp cheddar cheese, aged to perfection', emoji: '🧀' },
-        { id: 12, name: 'Farm Eggs', price: 4.99, category: 'dairy', description: 'Fresh farm eggs from free-range hens', emoji: '🥚' },
-        { id: 13, name: 'Artisan Bread', price: 4.99, category: 'bakery', description: 'Freshly baked artisan sourdough bread', emoji: '🍞' },
-        { id: 14, name: 'Croissants', price: 6.99, category: 'bakery', description: 'Buttery French croissants, baked daily', emoji: '🥐' },
-        { id: 15, name: 'Bagels', price: 5.49, category: 'bakery', description: 'Fresh New York style bagels', emoji: '🥯' },
-        { id: 16, name: 'Chocolate Muffins', price: 7.99, category: 'bakery', description: 'Rich chocolate chip muffins', emoji: '🧁' }
-      ]
+      // ...existing code...
+const products = [
+  { id: 1, name: 'Fresh Bananas', price: 2.99, category: 'fruits', description: 'Sweet and ripe bananas, perfect for smoothies', logo: 'images/banana.png' },
+  { id: 2, name: 'Red Apples', price: 4.99, category: 'fruits', description: 'Crisp and juicy red apples, great for snacking', logo: 'images/apple.png' },
+  // ...boshqa mahsulotlar ham shunday...
+]
+// ...existing code...
+
+addToCart(productId) {
+  const existingItem = this.cartItems.find(item => item.id === productId)
+  if (existingItem) {
+    existingItem.quantity += 1
+  } else {
+    // Mahsulotlar ro'yxatini yuqoridagi products dan oling
+    const product = products.find(p => p.id === productId)
+    if (product) {
+      this.cartItems.push({
+        ...product,
+        quantity: 1
+      })
+    }
+  }
+  this.saveToStorage()
+  this.updateCartCount()
+  this.updateCartDisplay()
+  this.showAddedToCartFeedback()
+}
+
+// ...existing code...
+
+updateCartDisplay() {
+  // ...existing code...
+  if (this.cartItems.length === 0) {
+    // ...existing code...
+  } else {
+    cartItemsContainer.innerHTML = this.cartItems.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-image">
+          <img src="${item.logo}" alt="${item.name}" style="width:40px;height:40px;">
+        </div>
+        <div class="cart-item-info">
+          <h3 class="cart-item-name">${item.name}</h3>
+          <p class="cart-item-price">$${item.price.toFixed(2)} each</p>
+        </div>
+        <div class="cart-item-controls">
+          <button class="quantity-btn quantity-decrease" data-product-id="${item.id}">-</button>
+          <span class="quantity">${item.quantity}</span>
+          <button class="quantity-btn quantity-increase" data-product-id="${item.id}">+</button>
+          <button class="remove-btn" data-product-id="${item.id}">Remove</button>
+        </div>
+      </div>
+    `).join('')
+    checkoutBtn.disabled = false
+  }
+  // ...existing code...
+}
+// ...existing code...
       
       const product = products.find(p => p.id === productId)
       if (product) {
